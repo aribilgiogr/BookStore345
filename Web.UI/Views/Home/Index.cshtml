@@ -1,0 +1,19 @@
+﻿@using Core.Concrete.DTOs
+@model IEnumerable<BookListItemDto>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Kitaplar</h1>
+    <ul>
+        @foreach(var book in Model)
+        {
+            <li>@book.Title</li>
+        }
+    </ul>
+    @if (!Model.Any())
+    {
+        <h2 class="text-center">Kayıtlı kitap bulunamadı!</h2>
+    }
+</div>

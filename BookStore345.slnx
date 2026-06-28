@@ -3,4 +3,5 @@
   <Project Path="Core/Core.csproj" />
   <Project Path="Data/Data.csproj" />
   <Project Path="Utils/Utils.csproj" />
+  <Project Path="Web.UI/Web.UI.csproj" Id="904171ce-9219-41a7-8d02-12e71d75da50" />
 </Solution>

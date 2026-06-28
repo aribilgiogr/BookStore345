@@ -17,8 +17,8 @@ namespace Business
             services.AddDbContext<StoreContext>(options => options.UseSqlServer(configuration.GetConnectionString("store_db")));
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-
             services.AddScoped<IShelfService, ShelfService>();
+
             return services;
         }
     }
