@@ -15,7 +15,10 @@ namespace Business.Services
 
         public async Task<BookDetailDto?> GetBookDetailByIdAsync(int id)
         {
-            var book = await unitOfWork.Books.FindOneAsync(id);
+            var books = await unitOfWork.Books.FindManyAsync(x => x.Id == id, "Author", "Genre", "Publisher");
+
+            var book = books.FirstOrDefault();
+
             if (book != null)
             {
                 return new BookDetailDto
