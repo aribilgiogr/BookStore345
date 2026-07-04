@@ -1,0 +1,98 @@
+﻿@using Core.Concrete.DTOs
+@model BookDetailDto
+@{
+}
+
+<section class="book-detail-section py-5">
+    <div class="container">
+
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/" class="text-decoration-none">Ana Sayfa</a></li>
+                <li class="breadcrumb-item"><a href="#" class="text-decoration-none">@Model.Genre</a></li>
+                <li class="breadcrumb-item active" aria-current="page">@Model.Title</li>
+            </ol>
+        </nav>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4 p-md-5">
+                <div class="row g-5">
+
+                    <div class="col-12 col-md-5 col-lg-4 text-center">
+                        @if (!string.IsNullOrEmpty(Model.CoverImagePath))
+                        {
+                            <img src="@Model.CoverImagePath" class="img-fluid rounded shadow-sm" alt="@Model.Title" style="width: 100%; max-width: 400px; aspect-ratio: 2/3; object-fit: cover;">
+                        }
+                        else
+                        {
+                            <div class="bg-light rounded d-flex align-items-center justify-content-center text-secondary shadow-sm" style="width: 100%; max-width: 400px; aspect-ratio: 2/3; margin: 0 auto;">
+                                <span>Görsel Bulunamadı</span>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="col-12 col-md-7 col-lg-8 d-flex flex-column">
+
+                        <h1 class="fw-bold mb-3">@Model.Title</h1>
+                        <div class="mb-4 text-muted fs-6">
+                            <span class="me-4"><strong>Yazar:</strong> <a href="#" class="text-decoration-none text-body border-bottom">@Model.AuthorName</a></span>
+                            <span><strong>Yayınevi:</strong> <a href="#" class="text-decoration-none text-body border-bottom">@Model.PublisherName</a></span>
+                        </div>
+
+                        <div class="p-4 bg-light rounded mb-4 d-flex flex-column flex-sm-row justify-content-between align-items-sm-center border">
+                            <div class="mb-3 mb-sm-0">
+                                <span class="d-block text-muted small mb-1">Satış Fiyatı</span>
+                                <span class="fs-2 fw-bold text-dark">@Model.Price.ToString("C2")</span>
+                            </div>
+                            <div class="text-sm-end">
+                                @if (Model.InStock)
+                                {
+                                    <span class="badge bg-success fs-6 px-3 py-2 mb-2 d-inline-block">Stokta</span>
+                                    <button class="btn btn-primary btn-lg w-100 fw-bold shadow-sm">Sepete Ekle</button>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger fs-6 px-3 py-2 mb-2 d-inline-block">Tükendi</span>
+                                    <button class="btn btn-secondary btn-lg w-100 fw-bold" disabled>Stokta Yok</button>
+                                    <button class="btn btn-outline-primary w-100 mt-2 btn-sm">Gelince Haber Ver</button>
+                                }
+                            </div>
+                        </div>
+
+                        <h5 class="fw-bold border-bottom pb-2 mb-3 mt-2">Kitap Özellikleri</h5>
+                        <div class="row row-cols-2 row-cols-md-3 g-3 mb-4 text-muted small">
+                            <div class="col">
+                                <strong>ISBN:</strong> <br><span class="text-dark">@Model.ISBN</span>
+                            </div>
+                            <div class="col">
+                                <strong>Sayfa Sayısı:</strong> <br><span class="text-dark">@Model.PageCount</span>
+                            </div>
+                            <div class="col">
+                                <strong>Basım Yılı:</strong> <br><span class="text-dark">@Model.PublishYear</span>
+                            </div>
+                            <div class="col">
+                                <strong>Dil:</strong> <br><span class="text-dark">@(string.IsNullOrEmpty(Model.Language) ? "Belirtilmemiş" : Model.Language)</span>
+                            </div>
+                            <div class="col">
+                                <strong>Kategori:</strong> <br><span class="text-dark">@Model.Genre</span>
+                            </div>
+                        </div>
+
+                        <h5 class="fw-bold border-bottom pb-2 mb-3 mt-2">Tanıtım Bülteni</h5>
+                        <div class="text-body" style="line-height: 1.7;">
+                            @if (!string.IsNullOrEmpty(Model.Description))
+                            {
+                                <p>@Html.Raw(Model.Description.Replace("\n", "<br>"))</p>
+                            }
+                            else
+                            {
+                                <p class="text-muted fst-italic">Bu kitap için henüz bir açıklama girilmemiştir.</p>
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

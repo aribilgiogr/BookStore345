@@ -13,6 +13,31 @@ namespace Business.Services
             this.unitOfWork = unitOfWork;
         }
 
+        public async Task<BookDetailDto?> GetBookDetailByIdAsync(int id)
+        {
+            var book = await unitOfWork.Books.FindOneAsync(id);
+            if (book != null)
+            {
+                return new BookDetailDto
+                {
+                    Id = book.Id,
+                    Title = book.Title,
+                    CoverImagePath = book.CoverImagePath,
+                    Price = book.Price,
+                    InStock = book.Stock > 0,
+                    AuthorName = book.Author!.FirstName + " " + book.Author!.LastName,
+                    Genre = book.Genre!.Name,
+                    PublisherName = book.Publisher!.Name,
+                    Description = book.Description,
+                    ISBN = book.ISBN,
+                    Language = book.Language,
+                    PageCount = book.PageCount,
+                    PublishYear = book.PublishYear,
+                };
+            }
+            return null;
+        }
+
         public async Task<IEnumerable<BookListItemDto>> GetBooksAsync()
         {
             var books = await unitOfWork.Books.FindManyAsync(x => x.Active, "Author", "Genre", "Publisher");

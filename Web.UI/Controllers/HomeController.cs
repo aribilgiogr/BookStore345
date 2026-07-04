@@ -21,15 +21,19 @@ namespace Web.UI.Controllers
             return View(books);
         }
 
-        public IActionResult Privacy()
+        // slug: sadece sayılarla tanımlamak bir url için çok uygun değildir. Bu sebeple ürün isimlerinden bir url oluştururuz.
+        public async Task<IActionResult> Details(int id, string slug)
         {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var book = await service.GetBookDetailByIdAsync(id);
+            if (book != null)
+            {
+                return View(book);
+            }
+            else
+            {
+                // 404 not found: Sayfa bulunamadı.
+                return NotFound();
+            }
         }
     }
 }
