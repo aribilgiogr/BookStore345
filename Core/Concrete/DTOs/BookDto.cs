@@ -28,4 +28,12 @@
         public int PageCount { get; set; }
         public string? Language { get; set; }
     }
+
+    public class FilterDto
+    {
+        public string? SearchTerm { get; set; }
+        public int? SelectedAuthorId { get; set; }
+        public int? SelectedPublisherId { get; set; }
+        public int? SelectedGenreId { get; set; }
+    }
 }

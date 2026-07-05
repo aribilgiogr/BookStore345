@@ -1,0 +1,12 @@
+﻿@model BookFilterViewModel
+@{
+}
+
+<div class="mb-3">
+    <label asp-for="SelectedAuthorId"></label>
+    <select asp-for="SelectedAuthorId" asp-items="@Model.Authors"></select>
+</div>
+<div class="mb-3">
+    <label asp-for="SelectedPublisherId"></label>
+    <select asp-for="SelectedPublisherId" asp-items="@Model.Publishers"></select>
+</div>

@@ -1,6 +1,6 @@
 using Core.Abstracts.IServices;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Web.UI.Models;
 
 namespace Web.UI.Controllers
@@ -34,6 +34,18 @@ namespace Web.UI.Controllers
                 // 404 not found: Sayfa bulunamadı.
                 return NotFound();
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Filter(BookFilterViewModel model)
+        {
+            model.Authors = from a in await service.GetAuthorsAsync()
+                            select new SelectListItem(a.FullName, a.Id.ToString());
+
+            model.Publishers = from p in await service.GetPublishersAsync()
+                               select new SelectListItem(p.Name, p.Id.ToString());
+
+            return View(model);
         }
     }
 }

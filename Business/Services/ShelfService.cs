@@ -13,6 +13,24 @@ namespace Business.Services
             this.unitOfWork = unitOfWork;
         }
 
+        public Task<IEnumerable<BookListItemDto>> FilterBooksAsync(FilterDto filter)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<AuthorDto>> GetAuthorsAsync()
+        {
+            var authors = await unitOfWork.Authors.FindManyAsync();
+            return from author in authors.ToList()
+                   select new AuthorDto
+                   {
+                       Id = author.Id,
+                       FullName = author.FirstName + " " + author.LastName,
+                       Biography = author.Biography,
+                       Picture = author.Picture,
+                   };
+        }
+
         public async Task<BookDetailDto?> GetBookDetailByIdAsync(int id)
         {
             var books = await unitOfWork.Books.FindManyAsync(x => x.Id == id, "Author", "Genre", "Publisher");
@@ -55,6 +73,28 @@ namespace Business.Services
                        AuthorName = book.Author!.FirstName + " " + book.Author!.LastName,
                        Genre = book.Genre!.Name,
                        PublisherName = book.Publisher!.Name
+                   };
+        }
+
+        public async Task<IEnumerable<GenreDto>> GetGenresAsync()
+        {
+            var genres = await unitOfWork.Genres.FindManyAsync();
+            return from genre in genres.ToList()
+                   select new GenreDto
+                   {
+                       Id = genre.Id,
+                       Names = genre.Name.Split('|')
+                   };
+        }
+
+        public async Task<IEnumerable<PublisherDto>> GetPublishersAsync()
+        {
+            var publishers = await unitOfWork.Publishers.FindManyAsync();
+            return from publisher in publishers.ToList()
+                   select new PublisherDto
+                   {
+                       Id = publisher.Id,
+                       Name = publisher.Name,
                    };
         }
     }
