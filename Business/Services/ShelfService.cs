@@ -13,9 +13,30 @@ namespace Business.Services
             this.unitOfWork = unitOfWork;
         }
 
-        public Task<IEnumerable<BookListItemDto>> FilterBooksAsync(FilterDto filter)
+        public async Task<IEnumerable<BookListItemDto>> FilterBooksAsync(FilterDto filter)
         {
-            throw new NotImplementedException();
+            var books = await unitOfWork.Books.FindManyAsync(x =>
+                    x.Active &&
+                    (string.IsNullOrEmpty(filter.SearchTerm) || x.Title.Contains(filter.SearchTerm)) &&
+                    (!filter.SelectedAuthorId.HasValue || x.AuthorId == filter.SelectedAuthorId) &&
+                    (!filter.SelectedPublisherId.HasValue || x.PublisherId == filter.SelectedPublisherId) &&
+                    (string.IsNullOrEmpty(filter.SelectedGenreName) || (x.Genre != null && x.Genre.Name.Contains(filter.SelectedGenreName))),
+                    "Author", "Genre", "Publisher"
+                );
+
+            return books.Select(book => new BookListItemDto
+            {
+                Id = book.Id,
+                Title = book.Title,
+                CoverImagePath = book.CoverImagePath,
+                Price = book.Price,
+                InStock = book.Stock > 0,
+                AuthorName = book.Author!.FirstName + " " + book.Author!.LastName,
+                AuthorId = book.AuthorId,
+                Genre = book.Genre!.Name,
+                PublisherName = book.Publisher!.Name,
+                PublisherId = book.PublisherId,
+            }).ToList();
         }
 
         public async Task<IEnumerable<AuthorDto>> GetAuthorsAsync()

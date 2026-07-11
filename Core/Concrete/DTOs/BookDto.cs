@@ -8,8 +8,10 @@
         public decimal Price { get; set; }
         public bool InStock { get; set; }
         public string AuthorName { get; set; } = null!;
+        public int AuthorId { get; set; }
         public string Genre { get; set; } = null!;
         public string PublisherName { get; set; } = null!;
+        public int PublisherId { get; set; }
     }
 
     public class BookDetailDto
@@ -34,6 +36,6 @@
         public string? SearchTerm { get; set; }
         public int? SelectedAuthorId { get; set; }
         public int? SelectedPublisherId { get; set; }
-        public int? SelectedGenreId { get; set; }
+        public string? SelectedGenreName { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 using Core.Abstracts.IServices;
+using Core.Concrete.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Web.UI.Models;
@@ -40,10 +41,27 @@ namespace Web.UI.Controllers
         public async Task<IActionResult> Filter(BookFilterViewModel model)
         {
             model.Authors = from a in await service.GetAuthorsAsync()
-                            select new SelectListItem(a.FullName, a.Id.ToString());
+                            select new SelectListItem(a.FullName, a.Id.ToString(), model.SelectedAuthorId == a.Id);
 
             model.Publishers = from p in await service.GetPublishersAsync()
-                               select new SelectListItem(p.Name, p.Id.ToString());
+                               select new SelectListItem(p.Name, p.Id.ToString(), model.SelectedPublisherId == p.Id);
+
+            var allGenres = await service.GetGenresAsync();
+            model.Genres = allGenres
+                .SelectMany(g => g.Names) // Tüm dizileri tek bir listeye dönüştürür
+                .Distinct()               // Tekrar edenleri temizler
+                .Select(name => new SelectListItem(name, name, name == model.SelectedGenreName)) // Text ve Value olarak ismi atar
+                .ToList();
+
+            var filter = new FilterDto
+            {
+                SearchTerm = model.SearchTerm,
+                SelectedAuthorId = model.SelectedAuthorId,
+                SelectedPublisherId = model.SelectedPublisherId,
+                SelectedGenreName = model.SelectedGenreName,
+            };
+
+            model.Books = (await service.FilterBooksAsync(filter)).ToList();
 
             return View(model);
         }

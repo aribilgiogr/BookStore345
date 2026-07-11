@@ -1,12 +1,92 @@
-﻿@model BookFilterViewModel
-@{
-}
+﻿@model Web.UI.Models.BookFilterViewModel
 
-<div class="mb-3">
-    <label asp-for="SelectedAuthorId"></label>
-    <select asp-for="SelectedAuthorId" asp-items="@Model.Authors"></select>
-</div>
-<div class="mb-3">
-    <label asp-for="SelectedPublisherId"></label>
-    <select asp-for="SelectedPublisherId" asp-items="@Model.Publishers"></select>
-</div>
+@{
+    ViewData["Title"] = "Kitap Filtrele";
+}
+<form asp-controller="Home" asp-action="Filter" method="get" class="d-flex justify-content-between">
+    <div>
+        <label asp-for="SearchTerm"></label>
+        <input type="text" asp-for="SearchTerm" class="form-control" />
+    </div>
+
+    <div>
+        <label asp-for="SelectedAuthorId"></label>
+        <select class="form-select" asp-for="SelectedAuthorId" asp-items="Model.Authors">
+            <option value="">-- Tümü --</option>
+        </select>
+    </div>
+
+    <div>
+        <label asp-for="SelectedPublisherId"></label>
+        <select class="form-select" asp-for="SelectedPublisherId" asp-items="Model.Publishers">
+            <option value="">-- Tümü --</option>
+        </select>
+    </div>
+
+    <div>
+        <label asp-for="SelectedGenreName"></label>
+        <select class="form-select" asp-for="SelectedGenreName" asp-items="Model.Genres">
+            <option value="">-- Tümü --</option>
+        </select>
+    </div>
+
+    <div>
+        <button type="submit" class="btn btn-outline-dark">Listele</button>
+        <button type="reset" class="btn btn-outline-dark">Temizle</button>
+    </div>
+</form>
+
+<hr />
+
+@if (Model.Books != null && Model.Books.Any())
+{
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+        @foreach (var item in Model.Books)
+        {
+            <div class="col">
+                <div class="card h-100">
+                    <div class="row g-0">
+                        <div class="col-md-3">
+                            <img src="@(item.CoverImagePath ?? "https://placehold.co/400x600")" class="img-fluid" alt="@item.Title" />
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">@item.Title</h5>
+                                <div>
+                                    <a asp-action="filter"
+                                       asp-controller="home"
+                                       asp-route-selectedauthorid="@item.AuthorId"
+                                       class="link-dark">
+                                        @item.AuthorName
+                                    </a> |
+
+                                    <a asp-action="filter"
+                                       asp-controller="home"
+                                       asp-route-selectedpublisherid="@item.PublisherId"
+                                       class="link-dark">
+                                        @item.PublisherName
+                                    </a>
+                                </div>
+                                <div>
+                                    @foreach (var genre in item.Genre.Split('|'))
+                                    {
+                                        <a asp-action="filter"
+                                           asp-controller="home"
+                                           asp-route-selectedgenrename="@genre"
+                                           class="btn btn-primary btn-small rounded-pill">
+                                            @genre
+                                        </a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p>Seçilen kriterlere uygun kitap bulunamadı.</p>
+}
